@@ -5,6 +5,7 @@ import (
 	"simplex/pln"
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/sset"
+	"simplex/opts"
 )
 
 //score function
@@ -15,6 +16,7 @@ type Linear interface {
 	Coordinates() []*geom.Point
 	Polyline() *pln.Polyline
 	Score(Linear, *rng.Range) (int, float64)
+	Options() *opts.Opts
 }
 
 type SimpleAlgorithm interface {
