@@ -9,28 +9,27 @@ import (
 	"github.com/intdxdt/deque"
 )
 
-//score function
 type ScoreFn func(Linear, *rng.Range) (int, float64)
-
-type NodeQueue interface {
-	NodeQueue() *deque.Deque
-}
 
 type Polygonal interface {
 	Coordinates() []*geom.Point
 	Polyline() *pln.Polyline
 }
 
-type Lingen interface {
+type Linegen interface {
+	Id() string
 	Score(Linear, *rng.Range) (int, float64)
 	Options() *opts.Opts
 }
 
-//Linear interface
+type NodeQueue interface {
+	NodeQueue() *deque.Deque
+}
+
 type Linear interface {
-	NodeQueue
 	Polygonal
-	Lingen
+	Linegen
+	NodeQueue
 }
 
 type SimpleAlgorithm interface {
