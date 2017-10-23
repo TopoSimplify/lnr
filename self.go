@@ -2,7 +2,6 @@ package lnr
 
 import (
 	"simplex/ctx"
-	"simplex/pln"
 	"simplex/seg"
 	"github.com/intdxdt/cmp"
 	"github.com/intdxdt/geom"
@@ -34,12 +33,12 @@ func updateKVCount(dict map[[2]float64]*kvCount, o *geom.Point, index int) {
 	v.count += 1
 }
 
-func SelfIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
+func SelfIntersection(poly Linear) *ctx.ContextGeometries {
 	var tree = *rtree.NewRTree(16)
 	var dict = make(map[[2]float64]*kvCount)
 	var data = make([]rtree.BoxObj, 0)
 
-	for _, s := range polyline.Segments() {
+	for _, s := range poly.Polyline().Segments() {
 		data = append(data, s)
 	}
 	tree.Load(data)

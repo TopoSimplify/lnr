@@ -5,7 +5,6 @@ import (
 	"simplex/pln"
 	"simplex/opts"
 	"github.com/intdxdt/geom"
-	"github.com/intdxdt/sset"
 	"github.com/intdxdt/deque"
 )
 
@@ -20,6 +19,7 @@ type Linegen interface {
 	Id() string
 	Score(Linear, *rng.Range) (int, float64)
 	Options() *opts.Opts
+	Simple() []int
 }
 
 type NodeQueue interface {
@@ -30,8 +30,4 @@ type Linear interface {
 	Polygonal
 	Linegen
 	NodeQueue
-}
-
-type SimpleAlgorithm interface {
-	Simple() *sset.SSet
 }
