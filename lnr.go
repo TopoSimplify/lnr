@@ -8,7 +8,7 @@ import (
 	"github.com/intdxdt/deque"
 )
 
-type ScoreFn func([]*geom.Point, *rng.Range) (int, float64)
+type ScoreFn func(coordinates []*geom.Point) (int, float64)
 
 type Polygonal interface {
 	Coordinates() []*geom.Point
