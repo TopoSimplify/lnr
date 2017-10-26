@@ -7,6 +7,7 @@ import (
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/sset"
 	"github.com/intdxdt/rtree"
+	"simplex/pln"
 )
 
 type kvCount struct {
@@ -33,12 +34,12 @@ func updateKVCount(dict map[[2]float64]*kvCount, o *geom.Point, index int) {
 	v.count += 1
 }
 
-func SelfIntersection(poly Linear) *ctx.ContextGeometries {
+func SelfIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var tree = *rtree.NewRTree(16)
 	var dict = make(map[[2]float64]*kvCount)
 	var data = make([]rtree.BoxObj, 0)
 
-	for _, s := range poly.Polyline().Segments() {
+	for _, s := range polyline.Segments() {
 		data = append(data, s)
 	}
 	tree.Load(data)
