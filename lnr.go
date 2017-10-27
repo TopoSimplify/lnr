@@ -1,7 +1,6 @@
 package lnr
 
 import (
-	"simplex/rng"
 	"simplex/pln"
 	"simplex/opts"
 	"github.com/intdxdt/geom"
@@ -17,7 +16,6 @@ type Polygonal interface {
 
 type Linegen interface {
 	Id() string
-	Score(Linear, *rng.Range) (int, float64)
 	Options() *opts.Opts
 	Simple() []int
 }
