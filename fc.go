@@ -11,8 +11,8 @@ func FeatureClassSelfIntersection(featureClass []Linear) map[string]*sset.SSet {
 		polyline := self.Polyline()
 		n := polyline.Len()
 		for i := 0; i < n; i++ {
-			var dat map[string]int
 			var ok bool
+			var dat map[string]int
 			var pt = polyline.Coordinates[i]
 			var key = [2]float64{pt.X(), pt.Y()}
 
