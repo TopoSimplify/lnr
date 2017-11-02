@@ -3,11 +3,11 @@ package lnr
 import (
 	"simplex/ctx"
 	"simplex/seg"
+	"simplex/pln"
 	"github.com/intdxdt/cmp"
 	"github.com/intdxdt/geom"
 	"github.com/intdxdt/sset"
 	"github.com/intdxdt/rtree"
-	"simplex/pln"
 )
 
 type kvCount struct {

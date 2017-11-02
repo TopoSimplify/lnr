@@ -4,7 +4,7 @@ import (
     "simplex/pln"
     "simplex/opts"
     "github.com/intdxdt/geom"
-    "simplex/nque"
+    "github.com/intdxdt/deque"
 )
 
 type ScoreFn func(coordinates []*geom.Point) (int, float64)
@@ -21,7 +21,7 @@ type Linegen interface {
 }
 
 type NodeQueue interface {
-    NodeQueue() *nque.Queue
+    NodeQueue() *deque.Deque
 }
 
 type Linear interface {
