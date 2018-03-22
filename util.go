@@ -11,7 +11,7 @@ func SegmentDB(polyline *pln.Polyline, nodeCapacity ...int ) (*rtree.RTree, []rt
 		capacity = nodeCapacity[0]
 	}
 
-	var tree = *rtree.NewRTree(capacity)
+	var tree = rtree.NewRTree(capacity)
 	var data = make([]rtree.BoxObj, 0)
 	for _, s := range polyline.Segments() {
 		data = append(data, s)
