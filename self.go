@@ -35,7 +35,7 @@ func updateKVCount(dict map[[2]float64]*kvCount, o *geom.Point, index int) {
 }
 
 func SelfIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
-	var tree = *rtree.NewRTree(16)
+	var tree = *rtree.NewRTree(4)
 	var dict = make(map[[2]float64]*kvCount)
 	var data = make([]rtree.BoxObj, 0)
 
