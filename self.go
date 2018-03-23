@@ -43,14 +43,13 @@ func SelfIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 
 	for k, v := range planarDict {
 		if v.degree > 2 {
-			var i = v.indexSet.First().(int)
-			var cg = ctx.New(geom.NewPoint(k[:]), i, i).AsPlanarVertex()
+			var cg = ctx.New(geom.NewPoint(k[:]), 0, -1).AsPlanarVertex()
 			cg.Meta.PlanarVertices = v.indexSet
 			results.Push(cg)
 		}
 	}
 
-	return results.Sort()
+	return results
 }
 
 func updatePlanarDict(dict map[[2]float64]*vertexDegree, s *seg.Seg) {
@@ -66,7 +65,7 @@ func updateNonPlanarDict(dict map[string]*crossings, s *seg.Seg, tree *rtree.RTr
 			continue
 		}
 
-		var intersects = s.Intersection(o)
+		var intersects = s.Intersection(o.Segment)
 
 		if len(intersects) == 0 {
 			continue
