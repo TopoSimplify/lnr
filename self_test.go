@@ -19,8 +19,8 @@ func TestToSelfIntersects(t *testing.T) {
 			g.Timeout(1 * time.Hour)
 			var ln = newPolyline("LINESTRING ( 740 380, 720 440, 760 460, 740 520, 860 520, 860 620, 740 620, 740 520, 640 520, 640 420, 841 420, 840 320 )")
 			var inters = SelfIntersection(ln)
-
 			g.Assert(inters.Len()).Equal(2)
+
 			ln = newPolyline("LINESTRING ( 1000 600, 1100 600, 1100 500, 1000 500, 1000 400, 1100 400, 1100 500, 1200 500, 1200 400, 1300 400, 1300 500, 1200 500, 1200 600, 1100 600 )")
 			inters = SelfIntersection(ln)
 			g.Assert(inters.Len()).Equal(3)

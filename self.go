@@ -55,10 +55,10 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 }
 
 func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
-	var dict = make(map[[4]int]struct{})
+	var cache = make(map[[4]int]bool)
 	var tree, data = segmentDB(polyline)
 	var results = ctx.NewContexts()
-	//update planar and non-planar dictionaries
+
 	for _, d := range data {
 		var s = d.(*seg.Seg)
 		var neighbours = tree.Search(s.BBox())
@@ -69,27 +69,34 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 				continue
 			}
 
-			var intersects = SegIntersection(s.Segment, o.Segment)
+			var k = cacheKey(s, o)
+			if cache[k] {
+				continue
+			}
+			cache[k] = true
 
+			var intersects = SegIntersection(s.Segment, o.Segment)
 			for _, pt := range intersects {
 				if pt.isVertexIntersection() {
 					continue
 				}
 
-				var k = [4]int{s.I, s.J, o.I, o.J}
-				var key = k[:]
-				iter.SortedIntSet(&key)
-
-				if _, ok := dict[k]; !ok {
-					var cg = ctx.New(pt.Point, 0, -1).AsNonPlanarVertex()
-					cg.Meta.NonPlanar = key
-					results.Push(cg)
-				}
-				dict[k] = struct{}{}
+				var indices = append([]int{}, k[:]...)
+				cg := ctx.New(pt.Point, 0, -1).AsNonPlanarVertex()
+				cg.Meta.NonPlanar = iter.SortedIntSet(&indices)
+				results.Push(cg)
 			}
 		}
 	}
 	return results
+}
+
+//cache key: [0, 1, 9, 10] == [9, 10, 0, 1]
+func cacheKey(a, b *seg.Seg) [4]int {
+	if b.I < a.I {
+		a, b = b, a
+	}
+	return [4]int{a.I, a.J, b.I, b.J}
 }
 
 func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []rtree.BoxObj) {
@@ -101,4 +108,3 @@ func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []rtree.BoxObj) {
 	tree.Load(data)
 	return tree, data
 }
-
