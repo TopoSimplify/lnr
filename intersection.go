@@ -3,32 +3,8 @@ package lnr
 import (
 	"github.com/intdxdt/sset"
 	"github.com/intdxdt/mbr"
-	"github.com/intdxdt/math"
 	"github.com/intdxdt/geom"
 )
-
-const (
-	collinear    = iota
-	seginters
-	vertexinters
-)
-
-type interPt struct {
-	*geom.Point
-	inter int
-}
-
-func (p *interPt) isCollinear() bool {
-	return p.inter == collinear
-}
-
-func (p *interPt) isSegmentIntersection() bool {
-	return p.inter == seginters
-}
-
-func (p *interPt) isVertexIntersection() bool {
-	return p.inter == vertexinters
-}
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
@@ -81,29 +57,6 @@ func SegIntersection(self, other *geom.Segment) []*interPt {
 	return coords
 }
 
-//sort 2d coordinates lexicographically
-func lexsort2d(apt, bpt interface{}) int {
-	var a, b = apt.(*interPt).Point[:], bpt.(*interPt).Point[:]
-	var d = a[0] - b[0]
-	if math.FloatEqual(d, 0) {
-		d = a[1] - b[1]
-	} else {
-		return lexval(d)
-	}
-
-	if math.FloatEqual(d, 0) {
-		return 0
-	}
-	return lexval(d)
-}
-
-func lexval(d float64) int {
-	if d < 0 {
-		return -1
-	}
-	return 1
-}
-
 func segseg_intersect_abdxy(sa, sb, oa, ob []float64) (float64, float64, float64,
 	float64, float64, float64, float64,
 	float64, float64, float64, float64) {
@@ -120,24 +73,6 @@ func segseg_intersect_abdxy(sa, sb, oa, ob []float64) (float64, float64, float64
 	a = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3))
 	b = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3))
 	return a, b, d, x1, y1, x2, y2, x3, y3, x4, y4
-}
-
-//clamp to zero if float is near zero
-func snap_to_zero(v float64) float64 {
-	if math.FloatEqual(v, 0.0) {
-		v = 0.0
-	}
-	return v
-}
-
-//clamp to zero or one
-func snap_to_zero_or_one(v float64) float64 {
-	if math.FloatEqual(v, 0.0) {
-		v = 0.0
-	} else if math.FloatEqual(v, 1.0) {
-		v = 1.0
-	}
-	return v
 }
 
 //updates coords that are in bounds

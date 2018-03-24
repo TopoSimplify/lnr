@@ -4,8 +4,8 @@ import (
 	"time"
 	"testing"
 	"simplex/pln"
-	"github.com/franela/goblin"
 	"github.com/intdxdt/geom"
+	"github.com/franela/goblin"
 )
 
 func newPolyline(wkt string) *pln.Polyline {
@@ -28,6 +28,10 @@ func TestToSelfIntersects(t *testing.T) {
 			ln = newPolyline("LINESTRING ( 1100 100, 1300 300, 1400 200, 1400 100, 900 100, 900 0, 1100 0, 1100 100, 1000 300, 900 200, 1100 100, 1300 0, 1200 -100, 1100 -100, 1100 -200, 1300 -200, 1300 0 )")
 			inters = SelfIntersection(ln)
 			g.Assert(inters.Len()).Equal(7)
+
+			ln = newPolyline("LINESTRING ( 1514.8265008716717 -573.3122984309911, 1739.3156848963422 -169.23176718658382, 1837.1395275571917 -226.77794673397926, 1808.7887862547589 -332.42242749048233, 1900.578967859 -400.895763554, 1767.3316987768692 -426.84574468170746, 1679.1814914770653 -277.4733153412824, 1591.5634006896519 -435.1858787586265, 1626.1503907141578 -525.5590212885274, 1767.3316987768692 -426.84574468170746, 1778.380225764687 -582.4209533259952 )")
+			inters = SelfIntersection(ln)
+			g.Assert(inters.Len()).Equal(3)
 		})
 	})
 }

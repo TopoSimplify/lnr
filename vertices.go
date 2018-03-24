@@ -34,3 +34,11 @@ func (v vertices) Swap(i, j int) {
 func (v vertices) Sort() {
 	sort.Sort(v)
 }
+
+
+func appendVertices(points []*vertex, coordinates []*geom.Point, fid string) []*vertex {
+	for i, pt := range coordinates {
+		points = append(points, &vertex{pt, i, fid})
+	}
+	return points
+}
