@@ -44,8 +44,7 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 
 		if d > 1 {
 			var cg = ctx.New(points[i].Point.Clone(), 0, -1).AsPlanarVertex()
-			cg.Meta.Planar = append([]int{}, indices...)
-			iter.SortedIntSet(&cg.Meta.Planar)
+			cg.Meta.Planar = iter.SortedIntsSet(indices)
 			results.Push(cg)
 		}
 		d = 0
@@ -80,10 +79,8 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 				if pt.isVertexIntersection() {
 					continue
 				}
-
-				var indices = append([]int{}, k[:]...)
 				cg := ctx.New(pt.Point, 0, -1).AsNonPlanarVertex()
-				cg.Meta.NonPlanar = iter.SortedIntSet(&indices)
+				cg.Meta.NonPlanar = iter.SortedIntsSet(k[:])
 				results.Push(cg)
 			}
 		}
