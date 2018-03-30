@@ -1,4 +1,4 @@
-package lnr
+package main
 
 import "github.com/intdxdt/geom"
 
@@ -12,9 +12,9 @@ func (p *interPt) isCollinear() bool {
 }
 
 func (p *interPt) isSegmentIntersection() bool {
-	return p.inter == seginters
+	return p.inter == segmentIntersect
 }
 
 func (p *interPt) isVertexIntersection() bool {
-	return p.inter == vertexinters
+	return p.inter == vertexIntersect
 }

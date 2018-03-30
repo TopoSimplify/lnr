@@ -1,9 +1,10 @@
-package lnr
+package main
 
 import (
 	"github.com/intdxdt/sset"
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom"
+	"fmt"
 )
 
 //do two lines intersect line segments a && b with
@@ -38,17 +39,17 @@ func SegIntersection(self, other *geom.Segment) []*interPt {
 		return coords
 	}
 	// is the intersection along the the segments
-	ua := snap_to_zero_or_one(a / d)
-	ub := snap_to_zero_or_one(b / d)
+	var ua = snap_to_zero_or_one(a / d)
+	var ub = snap_to_zero_or_one(b / d)
 
-	ua_0_1 := 0.0 <= ua && ua <= 1.0
-	ub_0_1 := 0.0 <= ub && ub <= 1.0
+	var ua_0_1 = 0.0 <= ua && ua <= 1.0
+	var ub_0_1 = 0.0 <= ub && ub <= 1.0
 
 	if ua_0_1 && ub_0_1 {
-		var pt = &interPt{geom.NewPointXY(x1+ua*(x2-x1), y1+ua*(y2-y1)), seginters}
+		var pt = &interPt{geom.NewPointXY(x1+ua*(x2-x1), y1+ua*(y2-y1)), segmentIntersect}
 		// intersection point is within range of lna && lnb ||  by extension
 		if (ua == 0 || ua == 1) && (ub == 0 || ub == 1) {
-			pt.inter = vertexinters
+			pt.inter = vertexIntersect
 		}
 
 		coords = append(coords, pt)
@@ -76,12 +77,13 @@ func segseg_intersect_abdxy(sa, sb, oa, ob []float64) (float64, float64, float64
 }
 
 //updates coords that are in bounds
-func update_coords_inbounds(bounds *mbr.MBR, x1, y1, x2, y2 float64, set *sset.SSet, region *mbr.MBR) {
+func update_coords_inbounds(bounds *mbr.MBR, x1, y1, x2, y2 float64, set *sset.SSet, region *mbr.MBR ) {
 	var pt *interPt
+
 	if bounds.ContainsXY(x1, y1) {
 		pt = &interPt{geom.NewPointXY(x1, y1), collinear}
 		if region.IsPoint() {
-			pt.inter = vertexinters
+			pt.inter = vertexIntersect
 		}
 		set.Add(pt)
 	}
@@ -89,7 +91,7 @@ func update_coords_inbounds(bounds *mbr.MBR, x1, y1, x2, y2 float64, set *sset.S
 	if bounds.ContainsXY(x2, y2) {
 		pt = &interPt{geom.NewPointXY(x2, y2), collinear}
 		if region.IsPoint() {
-			pt.inter = vertexinters
+			pt.inter = vertexIntersect
 		}
 		set.Add(pt)
 	}
