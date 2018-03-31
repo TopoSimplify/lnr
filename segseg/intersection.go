@@ -1,16 +1,15 @@
 package lnr
 
 import (
-	"fmt"
+	"sort"
 	"github.com/intdxdt/mbr"
 	"github.com/intdxdt/geom"
-	"sort"
 )
 
 //do two lines intersect line segments a && b with
 //vertices lna0, lna1 and lnb0, lnb1
 func SegIntersection(sa, sb, oa, ob *geom.Point) []*IntPt {
-	var coords = make([]*IntPt, 0)
+	var coords []*IntPt
 	var a, b, d = segseg_abd(sa[:], sb[:], oa[:], ob[:])
 
 	//snap to zero if near -0 or 0
@@ -20,19 +19,9 @@ func SegIntersection(sa, sb, oa, ob *geom.Point) []*IntPt {
 
 	// Are the line coincident?
 	if d == 0 {
-		if a == 0 && b == 0 {
-			var abox = BBox(sa, sb)
-			var bbox = BBox(oa, ob)
-			if region, ok := abox.Intersection(bbox); ok {
-				update_coords_inbounds(bbox, sa, &coords, region, "sa-.-.-.")
-				update_coords_inbounds(bbox, sb, &coords, region, ".-sb-.-.")
-				update_coords_inbounds(abox, oa, &coords, region, ".-.-oa-.")
-				update_coords_inbounds(abox, ob, &coords, region, ".-.-.-ob")
-			}
-		}
-		sort.Sort(IntPts(coords))
-		return coords
+		return coincident_segs(sa, sb, oa, ob, coords, a, b)
 	}
+
 	// is the intersection along the the segments
 	var ua = snap_to_zero_or_one(a / d)
 	var ub = snap_to_zero_or_one(b / d)
@@ -41,27 +30,19 @@ func SegIntersection(sa, sb, oa, ob *geom.Point) []*IntPt {
 	var ub_0_1 = 0.0 <= ub && ub <= 1.0
 
 	if ua_0_1 && ub_0_1 {
-		var postfix = inter_postfix(ua, ub)
-		var prefix = "x"
-		// intersection point is within range of lna && lnb ||  by extension
-		if (ua == 0 || ua == 1) || (ub == 0 || ub == 1) {
-			prefix = "v"
-		}
 		var pt = &IntPt{
-			geom.NewPointXY(
+			Point: geom.NewPointXY(
 				sa[x]+ua*(sb[x]-sa[x]),
 				sa[y]+ua*(sb[y]-sa[y]),
 			),
-			prefix + "-" + postfix,
+			Inter: interRelation(ua, ub),
 		}
 		coords = append(coords, pt)
 	}
-	sort.Sort(IntPts(coords))
 	return coords
 }
 
 func segseg_abd(sa, sb, oa, ob []float64) (float64, float64, float64) {
-
 	var x1, y1, x2, y2, x3, y3, x4, y4, d, a, b float64
 
 	x1, y1 = sa[x], sa[y]
@@ -77,30 +58,62 @@ func segseg_abd(sa, sb, oa, ob []float64) (float64, float64, float64) {
 	return a, b, d
 }
 
-func inter_postfix(ua, ub float64) string {
-	var sa, sb, oa, ob = ".", ".", ".", "."
+func interRelation(ua, ub float64) VBits {
+	var sa, sb, oa, ob VBits
 	if ua == 0 {
-		sa = "sa"
+		sa = SelfA
 	} else if ua == 1 {
-		sb = "sb"
+		sb = SelfB
+	}
+	if ub == 0 {
+		oa = OtherA
+	} else if ub == 1 {
+		ob = OtherB
+	}
+	return sa | sb | oa | ob
+}
+
+func coincident_segs(sa, sb, oa, ob *geom.Point, coords []*IntPt, a, b float64) []*IntPt {
+	if a == 0 && b == 0 {
+		var selfBox = BBox(sa, sb)
+		var otherBox = BBox(oa, ob)
+		if selfBox.Intersects(otherBox) {
+			update_coords_inbounds(otherBox, sa, &coords, SelfA)
+			update_coords_inbounds(otherBox, sb, &coords, SelfB)
+			update_coords_inbounds(selfBox, oa, &coords, OtherA)
+			update_coords_inbounds(selfBox, ob, &coords, OtherB)
+		}
+	}
+	//lexical sort
+	sort.Sort(IntPts(coords))
+
+	var points []*IntPt
+	var last = false
+	var n = len(coords) - 1
+
+	for idx := 0; idx < n; idx++ { //O(n)
+		var i, j = idx, idx+1
+		var pt = coords[i]
+		for i < n && coords[i].Equals2D(coords[j].Point) {
+			coords[j].Inter = coords[i].Inter | coords[j].Inter
+			last = j == n
+			pt = coords[j]
+			i = j
+			j = i + 1
+		}
+		idx = i
+		points = append(points, pt)
 	}
 
-	if ub == 0 {
-		oa = "oa"
-	} else if ub == 1 {
-		ob = "ob"
+	if !last {
+		points = append(points, coords[n])
 	}
-	return fmt.Sprintf("%v-%v-%v-%v", sa, sb, oa, ob)
+	return points
 }
 
 //updates coords that are in bounds
-func update_coords_inbounds(bounds *mbr.MBR, point *geom.Point, intpts *[]*IntPt, region *mbr.MBR, postfix string) {
+func update_coords_inbounds(bounds *mbr.MBR, point *geom.Point, intpts *[]*IntPt, vbits VBits) {
 	if bounds.ContainsXY(point[x], point[y]) {
-		var prefix = "c"
-		if region.IsPoint() {
-			prefix = "v"
-		}
-		pnt := &IntPt{point.Clone(), prefix + "-" + postfix}
-		*intpts = append(*intpts, pnt)
+		*intpts = append(*intpts, &IntPt{point.Clone(), vbits})
 	}
 }

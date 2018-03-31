@@ -11,10 +11,18 @@ const (
 	y
 )
 
+type VBits uint8
+
 const (
-	collinear        = iota
-	segmentIntersect
-	vertexIntersect
+	OtherB VBits = 1 << iota // 1 << 0 == 0001
+	OtherA                   // 1 << 1 == 0010
+	SelfB                    // 1 << 2 == 0100
+	SelfA                    // 1 << 3 == 1000
+)
+const Intersects VBits = 0
+const (
+	SelfMask  = SelfA | SelfB
+	OtherMask = OtherA | OtherB
 )
 
 //clamp to zero if float is near zero
