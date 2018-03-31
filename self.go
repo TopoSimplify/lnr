@@ -74,9 +74,9 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 			}
 			cache[k] = true
 
-			var intersects = SegIntersection(s.Segment, o.Segment)
+			var intersects = s.Segment.SegSegIntersection(o.Segment)
 			for _, pt := range intersects {
-				if pt.isVertexIntersection() {
+				if pt.IsVertex() && !pt.IsVerteXOR() { //if not exclusive vertex
 					continue
 				}
 				cg := ctx.New(pt.Point, 0, -1).AsNonPlanarVertex()

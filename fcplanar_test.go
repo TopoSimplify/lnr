@@ -3,10 +3,10 @@ package lnr
 import (
 	"fmt"
 	"time"
+	"sort"
 	"testing"
 	"github.com/franela/goblin"
 	"github.com/intdxdt/geom"
-	"sort"
 )
 
 func TestFCSelfPlanarIntersects(t *testing.T) {
