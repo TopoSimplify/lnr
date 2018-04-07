@@ -22,10 +22,10 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 		points = append(points, &vertex{pt, i, NullFId})
 	}
 	vertices(points).Sort() //O(nlogn)
-	var results = ctx.NewContexts()
 	var d = 0
-	var indices []int
 	var a, b *vertex
+	var indices []int
+	var results = ctx.NewContexts()
 
 	var bln bool
 	for i, n := 0, len(points); i < n-1; i++ { //O(n)

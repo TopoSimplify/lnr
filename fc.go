@@ -1,7 +1,6 @@
 package lnr
 
 import (
-	"random"
 	"github.com/intdxdt/geom"
 )
 
@@ -10,8 +9,8 @@ type FC struct {
 	Fid         string
 }
 
-func NewFC(coordinates []*geom.Point) *FC {
-	return &FC{coordinates, random.String(10)}
+func NewFC(coordinates []*geom.Point, fid string) *FC {
+	return &FC{coordinates, fid}
 }
 
 //Planar self-intersection FCPlanarSelfIntersection
@@ -59,4 +58,3 @@ func FCPlanarSelfIntersection(featureClass []*FC) map[string][]int {
 	}
 	return results
 }
-

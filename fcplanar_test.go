@@ -22,8 +22,8 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 
 			var fcs = make([]*FC, 0)
 			for i, wkt := range wkts {
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates())
-				o.Fid = fmt.Sprintf("%v", i)
+				id := fmt.Sprintf("%v", i)
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
 				fcs = append(fcs, o)
 			}
 
@@ -46,8 +46,8 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 
 			var fcs = make([]*FC, 0)
 			for i, wkt := range wkts {
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates())
-				o.Fid = fmt.Sprintf("%v", i)
+				id := fmt.Sprintf("%v", i)
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
 				fcs = append(fcs, o)
 			}
 
@@ -67,8 +67,8 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 
 			var fcs = make([]*FC, 0)
 			for i, wkt := range wkts {
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates())
-				o.Fid = fmt.Sprintf("%v", i)
+				id := fmt.Sprintf("%v", i)
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
 				fcs = append(fcs, o)
 			}
 
