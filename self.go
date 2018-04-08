@@ -8,11 +8,16 @@ import (
 	"github.com/intdxdt/rtree"
 )
 
-//update planar and non-planar intersections
-func SelfIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
-	return planarIntersects(polyline).Extend(
-		nonPlanarIntersection(polyline).DataView(),
-	)
+//Planar and non-planar intersections
+func SelfIntersection(polyline *pln.Polyline, planar, nonPlanar bool) *ctx.ContextGeometries {
+	var inters = ctx.NewContexts()
+	if planar {
+		inters.Extend(planarIntersects(polyline).DataView())
+	}
+	if nonPlanar {
+		inters.Extend(nonPlanarIntersection(polyline).DataView())
+	}
+	return inters
 }
 
 //Planar self-intersection
