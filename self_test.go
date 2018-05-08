@@ -3,7 +3,7 @@ package lnr
 import (
 	"time"
 	"testing"
-	"simplex/pln"
+	"github.com/TopoSimplify/pln"
 	"github.com/intdxdt/geom"
 	"github.com/franela/goblin"
 )

@@ -1,8 +1,8 @@
 package lnr
 
 import (
-	"simplex/pln"
-	"simplex/opts"
+	"github.com/TopoSimplify/pln"
+	"github.com/TopoSimplify/opts"
 	"github.com/intdxdt/geom"
 )
 

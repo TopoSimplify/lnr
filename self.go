@@ -1,9 +1,9 @@
 package lnr
 
 import (
-	"simplex/ctx"
-	"simplex/seg"
-	"simplex/pln"
+	"github.com/TopoSimplify/ctx"
+	"github.com/TopoSimplify/seg"
+	"github.com/TopoSimplify/pln"
 	"github.com/intdxdt/iter"
 	"github.com/intdxdt/rtree"
 )
