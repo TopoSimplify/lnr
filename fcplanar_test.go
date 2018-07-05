@@ -20,7 +20,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 				"LINESTRING ( 522.1337339611549 -1142.8294428402041, 657.2870474897259 -844.6418686821614, 839.4431219326025 -745.9739950256032, 972.4544063237287 -952.9896735474056, 1038.6763283544988 -1133.0556532167159 )",
 			}
 
-			var fcs = make([]*FC, 0)
+			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
 				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
@@ -44,7 +44,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 				"LINESTRING ( 100 -100, -100 0, -100 100, -200 200, -200 400, -400 500, -500 400, -600 300, -500 100, -300 100, -200 400, -300 700, -200 800, -200 900, 0 800, 300 1100, 300 1300, 600 1400, 900 1500, 1100 1300, 1400 900, 1700 900, 1800 600, 1800 -200 )",
 			}
 
-			var fcs = make([]*FC, 0)
+			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
 				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
@@ -52,7 +52,9 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			}
 
 			inters := FCPlanarSelfIntersection(fcs)
-			for _, o := range inters {sort.Ints(o)}
+			for _, o := range inters {
+				sort.Ints(o)
+			}
 			g.Assert(inters["0"]).Equal([]int{0, 6, 11})
 			g.Assert(inters["1"]).Equal([]int{5, 12})
 			g.Assert(inters["2"]).Equal([]int{4, 10, 15})
@@ -65,7 +67,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 				"LINESTRING ( 2269.1796168134806 -83.77218993561601, 2365.670068258874 -38.77945134029214, 2478.9650365290267 117.33993077360273, 2334.9112017144043 278.14838499157116, 2187.8674386291605 239.85027923797858, 2258.337993055571 337.42489305916286, 2448.6084900068804 339.0511366228493, 2531.0048305669916 236.59779211060578 )",
 			}
 
-			var fcs = make([]*FC, 0)
+			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
 				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
@@ -73,7 +75,9 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			}
 
 			inters := FCPlanarSelfIntersection(fcs)
-			for _, o := range inters {sort.Ints(o)}
+			for _, o := range inters {
+				sort.Ints(o)
+			}
 			g.Assert(inters["0"]).Equal([]int{2, 6})
 			g.Assert(inters["1"]).Equal([]int{2, 4})
 		})
