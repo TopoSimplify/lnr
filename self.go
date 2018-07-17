@@ -35,7 +35,7 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var bln bool
 	for i, n := 0, len(points); i < n-1; i++ { //O(n)
 		a, b = points[i], points[i+1]
-		bln = a.Equals2D(b.Point)
+		bln = a.Equals2D(&b.Point)
 		if bln {
 			if d == 0 {
 				indices = append(indices, a.index, b.index)
@@ -48,7 +48,7 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 		}
 
 		if d > 1 {
-			var cg = ctx.New(points[i].Point.Clone(), 0, -1).AsPlanarVertex()
+			var cg = ctx.New(&points[i].Point, 0, -1).AsPlanarVertex()
 			cg.Meta.Planar = iter.SortedIntsSet(indices)
 			results.Push(cg)
 		}
@@ -64,11 +64,11 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var results = ctx.NewContexts()
 
 	for _, d := range data {
-		var s = d.(*seg.Seg)
+		var s = d.Object.(*seg.Seg)
 		var neighbours = tree.Search(s.BBox())
 
-		for _, node := range neighbours {
-			var o = node.GetItem().(*seg.Seg)
+		for _, obj := range neighbours {
+			var o = obj.Object.(*seg.Seg)
 			if s == o {
 				continue
 			}
@@ -101,11 +101,12 @@ func cacheKey(a, b *seg.Seg) [4]int {
 	return [4]int{a.I, a.J, b.I, b.J}
 }
 
-func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []rtree.BoxObj) {
+func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []*rtree.Obj) {
 	var tree = rtree.NewRTree(4)
-	var data = make([]rtree.BoxObj, 0)
-	for _, s := range polyline.Segments() {
-		data = append(data, s)
+	var data = make([]*rtree.Obj, 0)
+	var segments = polyline.Segments()
+	for i := range segments {
+		data = append(data, rtree.Object(i, segments[i].BBox(), segments[i]))
 	}
 	tree.Load(data)
 	return tree, data

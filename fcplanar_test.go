@@ -23,7 +23,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
+				o  := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
 				fcs = append(fcs, o)
 			}
 

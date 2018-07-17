@@ -5,11 +5,11 @@ import (
 )
 
 type FC struct {
-	Coordinates []*geom.Point
+	Coordinates []geom.Point
 	Fid         string
 }
 
-func NewFC(coordinates []*geom.Point, fid string) *FC {
+func NewFC(coordinates []geom.Point, fid string) *FC {
 	return &FC{coordinates, fid}
 }
 
@@ -36,7 +36,7 @@ func FCPlanarSelfIntersection(featureClass []*FC) map[string][]int {
 	var bln bool
 	for i, n := 0, len(points); i < n-1; i++ { //O(n)
 		a, b = points[i], points[i+1]
-		bln = a.Equals2D(b.Point)
+		bln = a.Equals2D(&b.Point)
 		if bln {
 			if d == 0 {
 				indexes = append(indexes, a, b)
