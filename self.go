@@ -62,10 +62,11 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var cache = make(map[[4]int]bool)
 	var tree, data = segmentDB(polyline)
 	var results = ctx.NewContexts()
-
+	var s *seg.Seg
+	var neighbours []*rtree.Obj
 	for _, d := range data {
-		var s = d.Object.(*seg.Seg)
-		var neighbours = tree.Search(s.BBox())
+		s = d.Object.(*seg.Seg)
+		neighbours = tree.Search(s.Bounds())
 
 		for _, obj := range neighbours {
 			var o = obj.Object.(*seg.Seg)
@@ -106,7 +107,7 @@ func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []*rtree.Obj) {
 	var data = make([]*rtree.Obj, 0)
 	var segments = polyline.Segments()
 	for i := range segments {
-		data = append(data, rtree.Object(i, segments[i].BBox(), segments[i]))
+		data = append(data, rtree.Object(i, segments[i].Bounds(), segments[i]))
 	}
 	tree.Load(data)
 	return tree, data

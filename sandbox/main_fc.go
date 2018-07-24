@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"simplex/lnr"
 	"github.com/intdxdt/geom"
+	"github.com/TopoSimplify/lnr"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 
 	var fcs = make([]*lnr.FC, 0)
 	for i, wkt := range wkts {
-		o := lnr.NewFC(geom.NewLineStringFromWKT(wkt).Coordinates())
+		o := lnr.NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), "x123")
 		o.Fid = fmt.Sprintf("%v", i)
 		fcs = append(fcs, o)
 	}
