@@ -64,6 +64,7 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var results = ctx.NewContexts()
 	var s *seg.Seg
 	var neighbours []*rtree.Obj
+
 	for _, d := range data {
 		s = d.Object.(*seg.Seg)
 		neighbours = tree.Search(s.Bounds())
