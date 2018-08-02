@@ -1,11 +1,11 @@
 package lnr
 
 import (
-	"github.com/TopoSimplify/ctx"
-	"github.com/TopoSimplify/seg"
-	"github.com/TopoSimplify/pln"
 	"github.com/intdxdt/iter"
+	"github.com/intdxdt/geom"
 	"github.com/intdxdt/rtree"
+	"github.com/TopoSimplify/ctx"
+	"github.com/TopoSimplify/pln"
 )
 
 //Planar and non-planar intersections
@@ -22,9 +22,9 @@ func SelfIntersection(polyline *pln.Polyline, planar, nonPlanar bool) *ctx.Conte
 
 //Planar self-intersection
 func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
-	var points = make([]*vertex, 0, len(polyline.Coordinates))
-	for i, pt := range polyline.Coordinates {
-		points = append(points, &vertex{pt, i, NullFId})
+	var points = make([]*vertex, 0, polyline.Coordinates.Len())
+	for i := range polyline.Coordinates.Idxs {
+		points = append(points, &vertex{polyline.Pt(i), i, NullFId})
 	}
 	vertices(points).Sort() //O(nlogn)
 	var d = 0
@@ -35,7 +35,7 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var bln bool
 	for i, n := 0, len(points); i < n-1; i++ { //O(n)
 		a, b = points[i], points[i+1]
-		bln = a.Equals2D(&b.Point)
+		bln = a.Equals2D(b.Point)
 		if bln {
 			if d == 0 {
 				indices = append(indices, a.index, b.index)
@@ -48,7 +48,7 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 		}
 
 		if d > 1 {
-			var cg = ctx.New(&points[i].Point, 0, -1).AsPlanarVertex()
+			var cg = ctx.New(points[i].Point, 0, -1).AsPlanarVertex()
 			cg.Meta.Planar = iter.SortedIntsSet(indices)
 			results.Push(cg)
 		}
@@ -62,15 +62,15 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 	var cache = make(map[[4]int]bool)
 	var tree, data = segmentDB(polyline)
 	var results = ctx.NewContexts()
-	var s *seg.Seg
+	var s *geom.Segment
 	var neighbours []*rtree.Obj
 
 	for _, d := range data {
-		s = d.Object.(*seg.Seg)
+		s = d.Object.(*geom.Segment)
 		neighbours = tree.Search(s.Bounds())
 
 		for _, obj := range neighbours {
-			var o = obj.Object.(*seg.Seg)
+			var o = obj.Object.(*geom.Segment)
 			if s == o {
 				continue
 			}
@@ -81,7 +81,7 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 			}
 			cache[k] = true
 
-			var intersects = s.Segment.SegSegIntersection(o.Segment)
+			var intersects = s.SegSegIntersection(o)
 			for _, pt := range intersects {
 				if pt.IsVertex() && !pt.IsVerteXOR() { //if not exclusive vertex
 					continue
@@ -96,11 +96,11 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 }
 
 //cache key: [0, 1, 9, 10] == [9, 10, 0, 1]
-func cacheKey(a, b *seg.Seg) [4]int {
-	if b.I < a.I {
+func cacheKey(a, b *geom.Segment) [4]int {
+	if b.Coords.Idxs[0] < a.Coords.Idxs[0] {
 		a, b = b, a
 	}
-	return [4]int{a.I, a.J, b.I, b.J}
+	return [4]int{a.Coords.Idxs[0], a.Coords.Idxs[1], b.Coords.Idxs[0], b.Coords.Idxs[1]}
 }
 
 func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []*rtree.Obj) {

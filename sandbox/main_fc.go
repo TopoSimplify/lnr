@@ -23,7 +23,7 @@ func main() {
 
 	var fcs = make([]*lnr.FC, 0)
 	for i, wkt := range wkts {
-		o := lnr.NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), "x123")
+		o := lnr.NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, "x123")
 		o.Fid = fmt.Sprintf("%v", i)
 		fcs = append(fcs, o)
 	}

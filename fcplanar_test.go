@@ -5,8 +5,8 @@ import (
 	"time"
 	"sort"
 	"testing"
-	"github.com/franela/goblin"
 	"github.com/intdxdt/geom"
+	"github.com/franela/goblin"
 )
 
 func TestFCSelfPlanarIntersects(t *testing.T) {
@@ -23,7 +23,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
-				o  := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
+				o  := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, id)
 				fcs = append(fcs, o)
 			}
 
@@ -47,7 +47,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, id)
 				fcs = append(fcs, o)
 			}
 
@@ -70,7 +70,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			var fcs []*FC
 			for i, wkt := range wkts {
 				id := fmt.Sprintf("%v", i)
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates(), id)
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, id)
 				fcs = append(fcs, o)
 			}
 

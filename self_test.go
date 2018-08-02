@@ -9,7 +9,7 @@ import (
 )
 
 func newPolyline(wkt string) *pln.Polyline {
-	return pln.New(geom.NewLineStringFromWKT(wkt).Coordinates())
+	return pln.New(geom.NewLineStringFromWKT(wkt).Coordinates)
 }
 
 func TestToSelfIntersects(t *testing.T) {
