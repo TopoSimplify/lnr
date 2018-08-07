@@ -11,7 +11,7 @@ type vertex struct {
 	fid   string
 }
 
-type vertices []*vertex
+type vertices []vertex
 
 //lexical sort of x and y coordinates
 func (v vertices) Less(i, j int) bool {
@@ -35,10 +35,9 @@ func (v vertices) Sort() {
 	sort.Sort(v)
 }
 
-
-func appendVertices(points []*vertex, coordinates geom.Coords, fid string) []*vertex {
+func appendVertices(points []vertex, coordinates geom.Coords, fid string) []vertex {
 	for i := range coordinates.Idxs {
-		points = append(points, &vertex{coordinates.Pt(i), i, fid})
+		points = append(points, vertex{coordinates.Pt(i), i, fid})
 	}
 	return points
 }

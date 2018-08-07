@@ -22,11 +22,12 @@ func SelfIntersection(polyline *pln.Polyline, planar, nonPlanar bool) *ctx.Conte
 
 //Planar self-intersection
 func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
-	var points = make([]*vertex, 0, polyline.Coordinates.Len())
+	var points = make([]vertex, 0, polyline.Coordinates.Len())
 	for i := range polyline.Coordinates.Idxs {
-		points = append(points, &vertex{polyline.Pt(i), i, NullFId})
+		points = append(points, vertex{polyline.Pt(i), i, NullFId})
 	}
 	vertices(points).Sort() //O(nlogn)
+
 	var d = 0
 	var a, b *vertex
 	var indices []int
@@ -34,7 +35,7 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 
 	var bln bool
 	for i, n := 0, len(points); i < n-1; i++ { //O(n)
-		a, b = points[i], points[i+1]
+		a, b = &points[i], &points[i+1]
 		bln = a.Equals2D(b.Point)
 		if bln {
 			if d == 0 {

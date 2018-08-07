@@ -20,7 +20,7 @@ func FCPlanarSelfIntersection(featureClass []*FC) map[string][]int {
 	for _, self := range featureClass {
 		n +=  self.Coordinates.Len()
 	}
-	var points = make([]*vertex, 0, n)
+	var points = make([]vertex, 0, n)
 
 	for _, self := range featureClass {
 		points = appendVertices(points, self.Coordinates, self.Fid)
@@ -35,7 +35,7 @@ func FCPlanarSelfIntersection(featureClass []*FC) map[string][]int {
 
 	var bln bool
 	for i, n := 0, len(points); i < n-1; i++ { //O(n)
-		a, b = points[i], points[i+1]
+		a, b = &points[i], &points[i+1]
 		bln = a.Equals2D(b.Point)
 		if bln {
 			if d == 0 {
