@@ -3,9 +3,10 @@ package lnr
 import (
 	"github.com/intdxdt/iter"
 	"github.com/intdxdt/geom"
-	"github.com/intdxdt/rtree"
 	"github.com/TopoSimplify/ctx"
 	"github.com/TopoSimplify/pln"
+	"github.com/intdxdt/geom/index"
+	"github.com/intdxdt/geom/mono"
 )
 
 //Planar and non-planar intersections
@@ -60,18 +61,19 @@ func planarIntersects(polyline *pln.Polyline) *ctx.ContextGeometries {
 }
 
 func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
+	var s *mono.MBR
 	var cache = make(map[[4]int]bool)
 	var tree, data = segmentDB(polyline)
 	var results = ctx.NewContexts()
-	var s *geom.Segment
-	var neighbours []*rtree.Obj
+	var neighbours []*mono.MBR
+	var sa, sb, oa, ob *geom.Point
 
-	for _, d := range data {
-		s = d.Object.(*geom.Segment)
-		neighbours = tree.Search(s.Bounds())
+	for d := range data {
+		s = &data[d]
+		neighbours = tree.Search(s.MBR)
 
-		for _, obj := range neighbours {
-			var o = obj.Object.(*geom.Segment)
+		for _, o := range neighbours {
+			//var o = obj.Object.(*geom.Segment)
 			if s == o {
 				continue
 			}
@@ -82,8 +84,12 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 			}
 			cache[k] = true
 
-			var intersects = s.SegSegIntersection(o)
-			for _, pt := range intersects {
+			sa, sb = polyline.Pt(s.I), polyline.Pt(s.J)
+			oa, ob = polyline.Pt(o.I), polyline.Pt(o.J)
+			var intersects = geom.SegSegIntersection(sa, sb, oa, ob)
+			var pt *geom.InterPoint
+			for idx := range intersects {
+				pt = &intersects[idx]
 				if pt.IsVertex() && !pt.IsVerteXOR() { //if not exclusive vertex
 					continue
 				}
@@ -97,20 +103,16 @@ func nonPlanarIntersection(polyline *pln.Polyline) *ctx.ContextGeometries {
 }
 
 //cache key: [0, 1, 9, 10] == [9, 10, 0, 1]
-func cacheKey(a, b *geom.Segment) [4]int {
-	if b.Coords.Idxs[0] < a.Coords.Idxs[0] {
+func cacheKey(a, b *mono.MBR) [4]int {
+	if b.I < a.I {
 		a, b = b, a
 	}
-	return [4]int{a.Coords.Idxs[0], a.Coords.Idxs[1], b.Coords.Idxs[0], b.Coords.Idxs[1]}
+	return [4]int{a.I, a.J, b.I, b.J}
 }
 
-func segmentDB(polyline *pln.Polyline) (*rtree.RTree, []*rtree.Obj) {
-	var tree = rtree.NewRTree(4)
-	var data = make([]*rtree.Obj, 0)
-	var segments = polyline.Segments()
-	for i := range segments {
-		data = append(data, rtree.Object(i, segments[i].Bounds(), segments[i]))
-	}
+func segmentDB(polyline *pln.Polyline) (*index.Index, []mono.MBR) {
+	var tree = index.NewIndex()
+	var data = polyline.SegmentBounds()
 	tree.Load(data)
 	return tree, data
 }
