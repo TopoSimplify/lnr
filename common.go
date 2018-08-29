@@ -13,7 +13,6 @@ const (
 	y
 )
 
-
 type ScoreFn func(coordinates geom.Coords) (int, float64)
 
 type Polygonal interface {
@@ -22,7 +21,7 @@ type Polygonal interface {
 }
 
 type Linegen interface {
-	Id() string
+	Id() int
 	Options() *opts.Opts
 	Simple() []int
 }
