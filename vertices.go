@@ -8,7 +8,7 @@ import (
 type vertex struct {
 	*geom.Point
 	index int
-	fid   string
+	fid   int
 }
 
 type vertices []vertex
@@ -35,7 +35,7 @@ func (v vertices) Sort() {
 	sort.Sort(v)
 }
 
-func appendVertices(points []vertex, coordinates geom.Coords, fid string) []vertex {
+func appendVertices(points []vertex, coordinates geom.Coords, fid int ) []vertex {
 	for i := range coordinates.Idxs {
 		points = append(points, vertex{coordinates.Pt(i), i, fid})
 	}

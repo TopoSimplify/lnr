@@ -1,7 +1,6 @@
 package lnr
 
 import (
-	"fmt"
 	"time"
 	"sort"
 	"testing"
@@ -21,19 +20,18 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			}
 
 			var fcs []*FC
-			for i, wkt := range wkts {
-				id := fmt.Sprintf("%v", i)
-				o  := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, id)
+			for fid, wkt := range wkts {
+				o  := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, fid)
 				fcs = append(fcs, o)
 			}
 
-			inters := FCPlanarSelfIntersection(fcs)
+			var inters = FCPlanarSelfIntersection(fcs)
 			for _, o := range inters {
 				sort.Ints(o)
 			}
-			g.Assert(inters["0"]).Equal([]int{5, 10, 11, 12})
-			g.Assert(inters["1"]).Equal([]int{4})
-			g.Assert(inters["2"]).Equal([]int{1, 2})
+			g.Assert(inters[0]).Equal([]int{5, 10, 11, 12})
+			g.Assert(inters[1]).Equal([]int{4})
+			g.Assert(inters[2]).Equal([]int{1, 2})
 		})
 
 		g.It("fc planar intersects case 2", func() {
@@ -45,19 +43,18 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			}
 
 			var fcs []*FC
-			for i, wkt := range wkts {
-				id := fmt.Sprintf("%v", i)
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, id)
+			for fid, wkt := range wkts {
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, fid)
 				fcs = append(fcs, o)
 			}
 
-			inters := FCPlanarSelfIntersection(fcs)
+			var inters = FCPlanarSelfIntersection(fcs)
 			for _, o := range inters {
 				sort.Ints(o)
 			}
-			g.Assert(inters["0"]).Equal([]int{0, 6, 11})
-			g.Assert(inters["1"]).Equal([]int{5, 12})
-			g.Assert(inters["2"]).Equal([]int{4, 10, 15})
+			g.Assert(inters[0]).Equal([]int{0, 6, 11})
+			g.Assert(inters[1]).Equal([]int{5, 12})
+			g.Assert(inters[2]).Equal([]int{4, 10, 15})
 		})
 
 		g.It("fc planar intersects case 3", func() {
@@ -68,18 +65,17 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 			}
 
 			var fcs []*FC
-			for i, wkt := range wkts {
-				id := fmt.Sprintf("%v", i)
-				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, id)
+			for fid, wkt := range wkts {
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, fid)
 				fcs = append(fcs, o)
 			}
 
-			inters := FCPlanarSelfIntersection(fcs)
+			var inters = FCPlanarSelfIntersection(fcs)
 			for _, o := range inters {
 				sort.Ints(o)
 			}
-			g.Assert(inters["0"]).Equal([]int{2, 6})
-			g.Assert(inters["1"]).Equal([]int{2, 4})
+			g.Assert(inters[0]).Equal([]int{2, 6})
+			g.Assert(inters[1]).Equal([]int{2, 4})
 		})
 	})
 }

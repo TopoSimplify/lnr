@@ -6,15 +6,15 @@ import (
 
 type FC struct {
 	Coordinates geom.Coords
-	Fid         string
+	Fid         int
 }
 
-func NewFC(coordinates geom.Coords, fid string) *FC {
+func NewFC(coordinates geom.Coords, fid int) *FC {
 	return &FC{coordinates, fid}
 }
 
 //Planar self-intersection FCPlanarSelfIntersection
-func FCPlanarSelfIntersection(featureClass []*FC) map[string][]int {
+func FCPlanarSelfIntersection(featureClass []*FC) map[int][]int {
 	//preallocate points size
 	var n = 0
 	for _, self := range featureClass {
@@ -30,7 +30,7 @@ func FCPlanarSelfIntersection(featureClass []*FC) map[string][]int {
 
 	var d = 0
 	var indexes []*vertex
-	var results = make(map[string][]int, 0)
+	var results = make(map[int][]int, 0)
 	var a, b *vertex
 
 	var bln bool

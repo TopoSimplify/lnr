@@ -6,7 +6,7 @@ import (
 	"github.com/intdxdt/geom"
 )
 
-const NullFId = ""
+const NullFId = -9
 
 const (
 	x = iota
