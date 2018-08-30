@@ -4,6 +4,7 @@ import (
 	"github.com/TopoSimplify/pln"
 	"github.com/TopoSimplify/opts"
 	"github.com/intdxdt/geom"
+	"github.com/TopoSimplify/state"
 )
 
 const NullFId = -9
@@ -24,6 +25,7 @@ type Linegen interface {
 	Id() int
 	Options() *opts.Opts
 	Simple() []int
+	State()  *state.State
 }
 
 type Linear interface {
