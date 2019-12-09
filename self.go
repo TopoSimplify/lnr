@@ -1,12 +1,12 @@
 package lnr
 
 import (
-	"github.com/intdxdt/iter"
-	"github.com/intdxdt/geom"
 	"github.com/TopoSimplify/ctx"
 	"github.com/TopoSimplify/pln"
+	"github.com/intdxdt/geom"
 	"github.com/intdxdt/geom/index"
 	"github.com/intdxdt/geom/mono"
+	"github.com/intdxdt/iter"
 )
 
 //Planar and non-planar intersections

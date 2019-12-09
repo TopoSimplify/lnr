@@ -14,7 +14,7 @@ const (
 	y
 )
 
-type ScoreFn func(coordinates geom.Coords) (int, float64)
+type ScoreFn func(geom.Coords) (int, float64)
 
 type Polygonal interface {
 	Coordinates() []*geom.Point
