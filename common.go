@@ -1,10 +1,10 @@
 package lnr
 
 import (
-	"github.com/TopoSimplify/pln"
 	"github.com/TopoSimplify/opts"
-	"github.com/intdxdt/geom"
+	"github.com/TopoSimplify/pln"
 	"github.com/TopoSimplify/state"
+	"github.com/intdxdt/geom"
 )
 
 const NullFId = -9
@@ -25,7 +25,7 @@ type Linegen interface {
 	Id() int
 	Options() *opts.Opts
 	Simple() []int
-	State()  *state.State
+	State() *state.State
 }
 
 type Linear interface {

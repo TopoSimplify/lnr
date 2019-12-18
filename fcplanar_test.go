@@ -1,11 +1,11 @@
 package lnr
 
 import (
-	"time"
+	"github.com/franela/goblin"
+	"github.com/intdxdt/geom"
 	"sort"
 	"testing"
-	"github.com/intdxdt/geom"
-	"github.com/franela/goblin"
+	"time"
 )
 
 func TestFCSelfPlanarIntersects(t *testing.T) {
@@ -21,7 +21,7 @@ func TestFCSelfPlanarIntersects(t *testing.T) {
 
 			var fcs []*FC
 			for fid, wkt := range wkts {
-				o  := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, fid)
+				o := NewFC(geom.NewLineStringFromWKT(wkt).Coordinates, fid)
 				fcs = append(fcs, o)
 			}
 
